@@ -5,18 +5,24 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { LogOut, Settings2 } from "lucide-react";
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { User } from "@/types";
+import { signOut } from "@workos-inc/authkit-nextjs";
+import { logOut } from "@/actions/actions";
+import { useRouter } from "next/navigation";
 
 interface UserAvaterProps {
   user: User;
 }
 const UserAvatar = ({ user }: UserAvaterProps) => {
+  const handleLogout = () => {
+    logOut();
+  };
   return (
     <>
       <Menu as="div" className="relative inline-block text-left">
         <div>
           <MenuButton className="inline-flex w-full justify-center shadow-sm ring-1 ring-inset ring-gray-300 rounded-full">
             <Image
-              src={user.picture}
+              src={user.profilePictureUrl}
               alt="userAvater"
               height={45}
               width={45}
@@ -33,9 +39,9 @@ const UserAvatar = ({ user }: UserAvaterProps) => {
             <MenuItem>
               <>
                 <p className="px-4 py-1 font-semibold text-gray-700">
-                  {user.family_name && user.given_name
-                    ? `${user.given_name}  ${user.family_name}`
-                    : user.username}
+                  {user.firstName && user.lastName
+                    ? `${user.firstName}  ${user.lastName}`
+                    : null}
                 </p>
                 <p className="truncate px-4 text-sm">{user.email}</p>
               </>
@@ -54,9 +60,12 @@ const UserAvatar = ({ user }: UserAvaterProps) => {
 
           <div className="py-1">
             <MenuItem>
-              <LogoutLink className="flex gap-2 items-center px-4 py-2  text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900">
+              <button
+                onClick={() => handleLogout()}
+                className="w-full flex gap-2 items-center px-4 py-2  text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+              >
                 <LogOut className="h-4 w-4 shrink-0" /> Logout
-              </LogoutLink>
+              </button>
             </MenuItem>
           </div>
         </MenuItems>
